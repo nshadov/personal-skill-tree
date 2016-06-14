@@ -5,30 +5,74 @@
     .append("g")
     .attr("transform", "translate(50,50)");
 
+  // FILTERS
+  var filter = canvas.append("defs")
+    .append("filter")
+      .attr("id", "glowing")
+      .attr("width", "150%")
+      .attr("height", "150%");
+
+  filter.append("feGaussianBlur")
+    .attr("in", "SourceAlpha")
+    .attr("stdDeviation", 3)
+    .attr("result", "blur");
+
+  filter.append("feOffset")
+    .attr("in", "blur")
+    .attr("dx", 0)
+    .attr("dy", 0)
+    .attr("result", "offsetBlur");
+
+  filter.append("feFlood")
+    .attr("flood-color", "#00a7ff")
+    .attr("result", "color");
+  filter.append("feComposite")
+    .attr("in2", "offsetBlur")
+    .attr("operator", "in");
+
+  var feMerge = filter.append("feMerge");
+  feMerge.append("feMergeNode");
+  feMerge.append("feMergeNode")
+    .attr("in", "SourceGraphic");
+
+  // TREE DEFINITION
   var tree = d3.layout.tree()
     .size([600,900]);
 
-  d3.json("https://gist.githubusercontent.com/nshadov/0e087575e131691d481d1b3b0cd6a2d6/raw/ac47e5faff5ae7c861536f331abca7fbd394846f/skill-tree.json", function(data){
+  d3.json("https://gist.githubusercontent.com/nshadov/0e087575e131691d481d1b3b0cd6a2d6/raw/351973e88aa4f193e932b8f2d68cfbaa5418df36/skill-tree.json", function(data){
 
     //alert(JSON.stringify(data));
 
     var nodes = tree.nodes(data);
     var links = tree.links(nodes);
 
+    // Unused
     var diagonal = d3.svg.diagonal()
       .projection(function(d){
         return [d.y, d.x];
       });
+
+    var step_line = d3.svg.line().interpolate("step")
+      .x(function(d){ return d.ly })
+      .y(function(d){ return d.lx });
+
+    function diagonal_step(d){
+      var points = [
+          {lx: d.source.x, ly: d.source.y},
+          {lx: d.target.x, ly: d.target.y}
+      ];
+      return step_line(points);
+    }
 
     // EDGES
     canvas.selectAll(".link")
       .data(links)
       .enter()
       .append("path")
-        .attr("class", "link")
-        .attr("stroke", "gray")
+        .attr("class", "link glowing")
+        .attr("stroke", "black")
         .attr("fill", "none")
-        .attr("d", diagonal);
+        .attr("d", diagonal_step);
 
     // NODES
     var node = canvas.selectAll(".node")
@@ -41,11 +85,14 @@
         });
 
     node.append("circle")
-      .attr("r", 20)
+      .attr("r", 32)
+      .attr("class", "glowing")
       .attr("fill", "blue");
+
 
     node.append("image")
       .attr("xlink:href", function(d) { return "img/icons/skill.png"; })
+      .attr("class", "skill-img glowing")
       .attr("x", "-32px")
       .attr("y", "-32px")
       .attr("width", "64px")
@@ -55,5 +102,4 @@
       .text(function(d) {
         return d.name;
       });
-
   });

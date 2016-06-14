@@ -10,8 +10,12 @@
 }
 
 .link {
-  stroke: white;
-  stroke-width: 2;
+  stroke: black;
+  stroke-width: 3;
+}
+
+.glowing {
+  filter: url(#glowing);
 }
 
 body {
