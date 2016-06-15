@@ -9,6 +9,7 @@
   var filter = canvas.append("defs")
     .append("filter")
       .attr("id", "glowing")
+      .attr("filterUnits", "userSpaceOnUse")
       .attr("width", "150%")
       .attr("height", "150%");
 
