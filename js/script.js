@@ -1,9 +1,12 @@
 
-  var canvas = d3.select("body").append("svg")
+  var canvas = d3.select(".container").append("svg")
     .attr("width", 1000)
     .attr("height", 700)
     .append("g")
     .attr("transform", "translate(50,50)");
+
+  var width = $("svg").parent().width();
+  d3.select("svg").attr("width", width);
 
   // FILTERS
   var filter = canvas.append("defs")
@@ -40,7 +43,7 @@
   var tree = d3.layout.tree()
     .size([600,900]);
 
-  d3.json("https://gist.githubusercontent.com/nshadov/0e087575e131691d481d1b3b0cd6a2d6/raw/351973e88aa4f193e932b8f2d68cfbaa5418df36/skill-tree.json", function(data){
+  d3.json("https://gist.githubusercontent.com/nshadov/0e087575e131691d481d1b3b0cd6a2d6/raw/7376fd840c2c153cf76639062319e45094c1338d/skill-tree.json", function(data){
 
     //alert(JSON.stringify(data));
 
