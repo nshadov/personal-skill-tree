@@ -1,12 +1,17 @@
 
-  var canvas = d3.select(".container").append("svg")
-    .attr("width", 1000)
-    .attr("height", 700)
-    .append("g")
-    .attr("transform", "translate(50,50)");
+  var width = 0;
+  var height = 700;
+  var border = 100;
+  var nodesize = 40;
 
-  var width = $("svg").parent().width();
-  d3.select("svg").attr("width", width);
+  var canvas = d3.select(".container").append("svg")
+    .append("g")
+    .attr("transform", "translate("+border+","+border+")");
+
+  width = $("svg").parent().width();
+  d3.select("svg")
+    .attr("width", width)
+    .attr("height", height);
 
   // FILTERS
   var filter = canvas.append("defs")
@@ -18,7 +23,7 @@
 
   filter.append("feGaussianBlur")
     .attr("in", "SourceAlpha")
-    .attr("stdDeviation", 3)
+    .attr("stdDeviation", 2)
     .attr("result", "blur");
 
   filter.append("feOffset")
@@ -28,7 +33,7 @@
     .attr("result", "offsetBlur");
 
   filter.append("feFlood")
-    .attr("flood-color", "#00a7ff")
+    .attr("flood-color", "#0067ff")
     .attr("result", "color");
   filter.append("feComposite")
     .attr("in2", "offsetBlur")
@@ -41,7 +46,9 @@
 
   // TREE DEFINITION
   var tree = d3.layout.tree()
-    .size([600,900]);
+    .nodeSize(32)
+    .separation(function(a,b){return 1;})
+    .size([height-2*border,width-2*border]);
 
   d3.json("https://gist.githubusercontent.com/nshadov/0e087575e131691d481d1b3b0cd6a2d6/raw/7376fd840c2c153cf76639062319e45094c1338d/skill-tree.json", function(data){
 
@@ -89,7 +96,7 @@
         });
 
     node.append("circle")
-      .attr("r", 32)
+      .attr("r", nodesize/2)
       .attr("class", "glowing")
       .attr("fill", "blue");
 
@@ -97,10 +104,10 @@
     node.append("image")
       .attr("xlink:href", function(d) { return "img/icons/skill.png"; })
       .attr("class", "skill-img glowing")
-      .attr("x", "-32px")
-      .attr("y", "-32px")
-      .attr("width", "64px")
-      .attr("height", "64px");
+      .attr("x", "-"+nodesize/2+"px")
+      .attr("y", "-"+nodesize/2+"px")
+      .attr("width", nodesize+"px")
+      .attr("height", nodesize+"px");
 
     node.append("text")
       .text(function(d) {
