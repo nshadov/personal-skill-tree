@@ -46,8 +46,8 @@
 
   // TREE DEFINITION
   var tree = d3.layout.tree()
-    .nodeSize(32)
-    .separation(function(a,b){return 1;})
+    .nodeSize(nodesize)
+    .separation(function(a,b){return 10;})
     .size([height-2*border,width-2*border]);
 
   d3.json("https://gist.githubusercontent.com/nshadov/0e087575e131691d481d1b3b0cd6a2d6/raw/7376fd840c2c153cf76639062319e45094c1338d/skill-tree.json", function(data){
