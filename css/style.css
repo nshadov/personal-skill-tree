@@ -47,7 +47,6 @@ body {
 /* TOOLTIP */
 
 .tooltip {
-  width: 250px;
   border: 2px solid black;
   background-color: #000a24;
   color: #0074ff;
