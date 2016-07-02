@@ -50,7 +50,7 @@
     .separation(function(a,b){return 10;})
     .size([height-2*border,width-2*border]);
 
-  d3.json("https://gist.githubusercontent.com/nshadov/0e087575e131691d481d1b3b0cd6a2d6/raw/7376fd840c2c153cf76639062319e45094c1338d/skill-tree.json", function(data){
+  d3.json("https://gist.githubusercontent.com/nshadov/0e087575e131691d481d1b3b0cd6a2d6/raw/fa9279354c80e0d3b1332212a23d0010306b82af/skill-tree.json", function(data){
 
     //alert(JSON.stringify(data));
 
@@ -103,9 +103,9 @@
     // ADDING TOOLTIPS
     if (typeof tooltip !== 'undefined') {
     // the variable is defined
-    node.on("mouseover", function(){return show_tooltip();})
-	    .on("mousemove", function(){return move_tooltip();})
-	    .on("mouseout", function(){return hide_tooltip();});
+	node.on("mouseover", function(d){d3.select(this).classed("active", true ); return show_tooltip(d);})
+	    .on("mousemove", function(d){return move_tooltip(d);})
+	    .on("mouseout", function(d){d3.select(this).classed("active", false ); return hide_tooltip(d);});
     }
 
     node.append("image")
@@ -115,6 +115,16 @@
       .attr("y", "-"+nodesize/2+"px")
       .attr("width", nodesize+"px")
       .attr("height", nodesize+"px");
+
+
+    node.append("image")
+      .attr("xlink:href", function(d) { return "img/icons/"+d.icon+".png"; })
+      .attr("class", "skill-icon")
+      .attr("x", "-"+(nodesize/2-4)+"px")
+      .attr("y", "-"+(nodesize/2-4)+"px")
+      .attr("width", (nodesize-8)+"px")
+      .attr("height", (nodesize-8)+"px");
+
 
     node.append("text")
       .text(function(d) {
